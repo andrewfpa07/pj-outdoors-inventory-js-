@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home - PJ Outdoors Inventory</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body {
+        background-color: #2f2f2f;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    .page-container { display: flex; flex-direction: column; min-height: 100vh; }
+    .content-wrap { flex: 1; padding: 20px; }
+    .navbar {
+        background-color: #444;
+        padding: 10px 20px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    .navbar a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .navbar a:hover { color: #FFA500; }
+    .summary-cards { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
+    .summary-card {
+        background-color: #3f3f3f;
+        flex: 1;
+        min-width: 150px;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        text-align: center;
+        transition: 0.2s;
+        text-decoration: none;
+        color: white;
+    }
+    .summary-card:hover { background-color: #505050; cursor: pointer; }
+    .summary-card h3 { margin-bottom: 10px; color: #FFA500; }
+    .container-card { background-color: #3f3f3f; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.3); }
+    table { color: white; }
+    th { color: #FFA500; }
+    .btn-primary { background-color: #FFA500; border: none; transition: 0.3s; }
+    .btn-primary:hover { background-color: #e69500; }
+    footer { text-align: center; padding: 10px; color: #FFA500; font-weight: bold; background-color: #2f2f2f; }
+    @media (max-width: 768px) {
+        .navbar { flex-direction: column; gap: 10px; }
+        .summary-cards { flex-direction: column; }
+        .container-card { padding: 15px; }
+    }
+</style>
+</head>
+<body>
+<div class="page-container">
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/add">Add Product</a>
+        <a href="/search">Search</a>
+        <a href="/index">All Products</a>
+    </div>
+
+    <div class="content-wrap container">
+        <div class="summary-cards">
+            <a href="/index" class="summary-card">
+                <h3>Total Products</h3>
+                <p><%= total_products %></p>
+            </a>
+            <a href="/low-stock" class="summary-card">
+                <h3>Low Stock Items</h3>
+                <p><%= low_stock %></p>
+            </a>
+            <a href="/index" class="summary-card">
+                <h3>Containers Used</h3>
+                <p><%= containers_used %></p>
+            </a>
+        </div>
+
+        <div class="container-card">
+            <h2 class="mb-3">Container Overview</h2>
+            <table class="table table-striped table-dark">
+                <thead>
+                    <tr>
+                        <th>Container</th>
+                        <th>Number of Products</th>
+                        <th>View</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% Object.entries(containers).forEach(([cnum, count]) => { %>
+                    <tr>
+                        <td><%= cnum %></td>
+                        <td><%= count %></td>
+                        <td><a class="btn btn-sm btn-primary" href="/container/<%= cnum %>">View</a></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 PJ Outdoors Inventory System
+    </footer>
+</div>
+</body>
+</html>
