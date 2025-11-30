@@ -24,3 +24,4 @@ Open: http://localhost:3000
 - Search products
 - Low stock alerts
 - Mobile responsive
+## Live on Railway
