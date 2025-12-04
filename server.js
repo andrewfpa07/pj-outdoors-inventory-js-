@@ -46,7 +46,6 @@ const SIDES = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
 
 // HOME - Dashboard
 app.get('/', (req, res) => {
-  // Get container counts
   db.all('SELECT container, COUNT(*) AS count FROM products GROUP BY container ORDER BY container', [], (err, rows) => {
     if (err) {
       console.error(err);
@@ -57,14 +56,12 @@ app.get('/', (req, res) => {
     CONTAINERS.forEach(c => containers[c] = 0);
     rows.forEach(row => containers[row.container] = row.count);
 
-    // Get total products
     db.get('SELECT COUNT(*) AS total FROM products', [], (err, totalRow) => {
       if (err) {
         console.error(err);
         return res.status(500).send('Database error');
       }
 
-      // Get low stock count
       db.get('SELECT COUNT(*) AS low FROM products WHERE quantity <= 2', [], (err, lowRow) => {
         if (err) {
           console.error(err);
@@ -134,7 +131,7 @@ app.post('/add', (req, res) => {
 // UPDATE Product - GET
 app.get('/update/:id', (req, res) => {
   const productId = req.params.id;
-  
+
   db.get('SELECT * FROM products WHERE id = ?', [productId], (err, product) => {
     if (err) {
       console.error(err);
@@ -174,7 +171,7 @@ app.post('/update/:id', (req, res) => {
 // DELETE Product
 app.post('/delete/:id', (req, res) => {
   const productId = req.params.id;
-  
+
   db.run('DELETE FROM products WHERE id = ?', [productId], (err) => {
     if (err) {
       console.error(err);
@@ -192,7 +189,7 @@ app.get('/search', (req, res) => {
 // SEARCH - POST
 app.post('/search', (req, res) => {
   const searchName = req.body.name;
-  
+
   db.all('SELECT * FROM products WHERE name LIKE ?', [`%${searchName}%`], (err, results) => {
     if (err) {
       console.error(err);
@@ -202,10 +199,15 @@ app.post('/search', (req, res) => {
   });
 });
 
-// CONTAINER View
+// CONTAINER View - with default redirect
+app.get('/container', (req, res) => {
+  // Redirect to container 1 by default
+  res.redirect('/container/1');
+});
+
 app.get('/container/:id', (req, res) => {
   const containerId = parseInt(req.params.id);
-  
+
   db.all('SELECT * FROM products WHERE container = ? ORDER BY shelf', [containerId], (err, products) => {
     if (err) {
       console.error(err);
